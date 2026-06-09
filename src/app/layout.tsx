@@ -23,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${inter.className} min-h-screen bg-[#F8F8F8] dark:bg-black transition-colors duration-300`}>
         <Providers>
           <TopBar />       {/* ← pehle */}
           <MainNavbar />   {/* ← baad mein */}

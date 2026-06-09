@@ -1,8 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingCart, Star } from "lucide-react";
+import { motion } from "framer-motion";
+import { useCartStore } from "@/features/cart/store/cart.store";
+import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 
 import { createProductSlug } from "@/lib/slug";
+import { useEffect, useState } from "react";
 import { Product } from "../api/product.service";
 
 type ProductCardProps = {
@@ -10,8 +16,29 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const cartItems = useCartStore((state) => state.items);
+  const addItem = useCartStore((state) => state.addItem);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  
+  const wishlistItems = useWishlistStore((state) => state.items);
+  const toggleItem = useWishlistStore((state) => state.toggleItem);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
+  const cartItem = cartItems.find((i) => i.productId === product.id);
+  const quantityInCart = cartItem?.quantity || 0;
+  const wishlisted = wishlistItems.some((i) => i.productId === product.id);
+
   return (
-    <div className="group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition hover:shadow-lg sm:rounded-3xl">
+    <motion.div 
+      whileHover={{ y: -5 }}
+      className="group overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition hover:shadow-lg dark:hover:shadow-zinc-900/50 sm:rounded-3xl relative"
+    >
+      <div className="absolute top-3 left-3 z-10 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-black">
+        New
+      </div>
       <Link href={`/products/${createProductSlug(product.name, product.id)}`}>
         <div className="relative overflow-hidden bg-zinc-100">
           <div className="relative aspect-[4/4]">
@@ -28,8 +55,23 @@ export default function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          <button className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:right-4 sm:top-4 sm:h-10 sm:w-10">
-            <Heart size={15} className="sm:size-[18px]" />
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              toggleItem({
+                productId: product.id,
+                name: product.name,
+                price: product.price,
+                imageUrl: product.imageUrl,
+                categoryName: product.categoryName,
+              });
+            }}
+            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:right-4 sm:top-4 sm:h-10 sm:w-10 hover:bg-white"
+          >
+            <Heart 
+              size={15} 
+              className={`sm:size-[18px] transition ${mounted && wishlisted ? "fill-red-500 text-red-500" : "text-zinc-600"}`} 
+            />
           </button>
         </div>
       </Link>
@@ -40,7 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         </p>
 
        <Link href={`/products/${createProductSlug(product.name, product.id)}`}>
-          <h3 className="mt-1 line-clamp-2 min-h-[38px] text-sm font-semibold leading-5 text-zinc-900 transition hover:text-amber-600 sm:mt-2 sm:min-h-[52px] sm:text-lg sm:leading-6">
+          <h3 className="mt-1 line-clamp-2 min-h-[38px] text-sm font-semibold leading-5 text-zinc-900 dark:text-zinc-100 transition hover:text-amber-600 dark:hover:text-amber-500 sm:mt-2 sm:min-h-[52px] sm:text-lg sm:leading-6">
             {product.name}
           </h3>
         </Link>
@@ -56,16 +98,48 @@ export default function ProductCard({ product }: ProductCardProps) {
         </div>
 
         <div className="mt-2 sm:mt-4">
-          <span className="text-lg font-bold text-zinc-900 sm:text-2xl">
+          <span className="text-lg font-bold text-zinc-900 dark:text-white sm:text-2xl">
             ₹{product.price}
           </span>
         </div>
 
-        <button className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-[#0B1220] px-3 py-2 text-xs font-medium text-white transition hover:bg-black sm:mt-5 sm:gap-2 sm:rounded-2xl sm:py-3 sm:text-base">
-          <ShoppingCart size={15} className="sm:size-[18px]" />
-          Add
-        </button>
+        {mounted && quantityInCart > 0 ? (
+          <div className="mt-3 flex w-full items-center justify-between rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 p-1 sm:mt-5 sm:rounded-2xl">
+            <button
+              onClick={() => {
+                if (quantityInCart === 1) removeItem(product.id);
+                else updateQuantity(product.id, quantityInCart - 1);
+              }}
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm transition hover:bg-zinc-100 dark:hover:bg-zinc-700 sm:h-10 sm:w-10"
+            >
+              -
+            </button>
+            <span className="text-sm font-bold text-zinc-900 dark:text-white sm:text-base">
+              {quantityInCart}
+            </span>
+            <button
+              onClick={() => updateQuantity(product.id, quantityInCart + 1)}
+              className="flex h-8 w-8 items-center justify-center rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-sm transition hover:bg-zinc-100 dark:hover:bg-zinc-700 sm:h-10 sm:w-10"
+            >
+              +
+            </button>
+          </div>
+        ) : (
+          <button 
+            onClick={() => addItem({
+              productId: product.id,
+              name: product.name,
+              price: product.price,
+              imageUrl: product.imageUrl,
+              categoryName: product.categoryName,
+            })}
+            className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-[#0B1220] dark:bg-white px-3 py-2 text-xs font-medium text-white dark:text-black transition hover:bg-black dark:hover:bg-zinc-100 sm:mt-5 sm:gap-2 sm:rounded-2xl sm:py-3 sm:text-base"
+          >
+            <ShoppingCart size={15} className="sm:size-[18px]" />
+            Add
+          </button>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -14,13 +14,12 @@ import {
 import { getIdFromSlug } from "@/lib/slug";
 import { getCategories } from "@/features/categories/api/category.service";
 import { getFeaturedProducts, getProductById } from "@/features/products/api/product.service";
-import TopBar from "@/shared/layout/TopBar";
-import MainNavbar from "@/shared/layout/MainNavbar";
+
 import CategoryNav from "@/features/categories/components/CategoryNav";
 import Newsletter from "@/shared/components/Newsletter";
 import Footer from "@/shared/layout/Footer";
 import ProductCard from "@/features/products/components/ProductCard";
-
+import ProductActions from "@/features/products/components/ProductActions";
 
 type ProductDetailPageProps = {
   params: Promise<{
@@ -36,11 +35,23 @@ export default async function ProductDetailPage({
 
   if (!productId) notFound();
 
-  const [categories, product, latestProducts] = await Promise.all([
-    getCategories(),
-    getProductById(productId),
-    getFeaturedProducts(),
-  ]);
+  let categories = [];
+  let product = null;
+  let latestProducts = [];
+
+  try {
+    const results = await Promise.allSettled([
+      getCategories(),
+      getProductById(productId),
+      getFeaturedProducts(),
+    ]);
+
+    categories = results[0].status === "fulfilled" ? results[0].value : [];
+    product = results[1].status === "fulfilled" ? results[1].value : null;
+    latestProducts = results[2].status === "fulfilled" ? results[2].value : [];
+  } catch (error) {
+    console.error("Failed to fetch product details:", error);
+  }
 
   if (!product) notFound();
 
@@ -55,13 +66,11 @@ export default async function ProductDetailPage({
     .slice(0, 4);
 
   return (
-    <main className="min-h-screen bg-[#F8F8F8] text-zinc-900">
-      <TopBar />
-      <MainNavbar />
+    <main className="min-h-screen bg-[#F8F8F8] dark:bg-black text-zinc-900 dark:text-zinc-100">
       <CategoryNav categories={categories} />
 
-      <section className="border-b border-zinc-200 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-4 text-sm text-zinc-500">
+      <section className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+        <div className="mx-auto w-full xl:w-[75%] px-4 sm:px-6 lg:px-8 py-4 text-sm text-zinc-500">
           <Link href="/" className="hover:text-black">
             Home
           </Link>
@@ -75,9 +84,9 @@ export default async function ProductDetailPage({
       </section>
 
       <section className="py-8 sm:py-12">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-4 sm:p-6">
-            <div className="relative aspect-square overflow-hidden rounded-2xl bg-zinc-100">
+        <div className="mx-auto grid w-full xl:w-[75%] gap-8 px-4 sm:px-6 lg:px-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 sm:p-6">
+            <div className="relative aspect-square overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900">
               {product.imageUrl ? (
                 <Image
                   src={product.imageUrl}
@@ -110,12 +119,12 @@ export default async function ProductDetailPage({
             </div>
           </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-5 sm:p-8">
+          <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 sm:p-8">
             <p className="text-sm font-medium text-amber-600">
               {product.categoryName ?? "Product"}
             </p>
 
-            <h1 className="mt-3 text-3xl font-bold leading-tight text-zinc-900 sm:text-5xl">
+            <h1 className="mt-3 text-3xl font-bold leading-tight text-zinc-900 dark:text-white sm:text-5xl">
               {product.name}
             </h1>
 
@@ -134,66 +143,43 @@ export default async function ProductDetailPage({
               <span className="text-sm text-green-600">In Stock</span>
             </div>
 
-            <p className="mt-6 text-4xl font-bold text-zinc-900">
+            <p className="mt-6 text-4xl font-bold text-zinc-900 dark:text-white">
               ₹{product.price}
             </p>
 
-            <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-              <div className="flex items-center gap-2 font-semibold text-zinc-900">
+            <div className="mt-5 rounded-2xl border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-900/10 p-4">
+              <div className="flex items-center gap-2 font-semibold text-zinc-900 dark:text-amber-500">
                 <Tag size={18} className="text-amber-600" />
                 Available Offers
               </div>
 
-              <ul className="mt-3 space-y-2 text-sm text-zinc-700">
+              <ul className="mt-3 space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
                 <li>• 10% instant discount on selected bank cards</li>
                 <li>• Free delivery on eligible orders</li>
                 <li>• No-cost EMI options coming soon</li>
               </ul>
             </div>
 
-            <p className="mt-5 leading-8 text-zinc-600">
+            <p className="mt-5 leading-8 text-zinc-600 dark:text-zinc-400">
               {product.description ??
                 "Premium quality product designed for modern users with a smooth shopping experience."}
             </p>
 
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              <button className="flex items-center justify-center gap-2 rounded-2xl bg-[#0B1220] px-6 py-4 font-semibold text-white transition hover:bg-black">
-                <ShoppingCart size={20} />
-                Add to Cart
-              </button>
-
-              <Link
-                href="/login?redirect=/checkout"
-                className="flex items-center justify-center gap-2 rounded-2xl bg-amber-400 px-6 py-4 font-semibold text-black transition hover:bg-amber-500"
-              >
-                <Zap size={20} />
-                Buy Now
-              </Link>
-            </div>
-
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <button className="rounded-2xl border border-zinc-200 px-4 py-3 text-sm font-medium transition hover:bg-zinc-100">
-                Compare
-              </button>
-
-              <button className="rounded-2xl border border-zinc-200 px-4 py-3 text-sm font-medium transition hover:bg-zinc-100">
-                Share Product
-              </button>
-            </div>
+            <ProductActions product={product} />
 
             <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-2xl bg-zinc-50 p-4">
-                <Truck size={22} />
+              <div className="rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 p-4">
+                <Truck size={22} className="text-zinc-700 dark:text-zinc-300" />
                 <p className="mt-2 text-sm font-semibold">Fast Delivery</p>
               </div>
 
-              <div className="rounded-2xl bg-zinc-50 p-4">
-                <ShieldCheck size={22} />
+              <div className="rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 p-4">
+                <ShieldCheck size={22} className="text-zinc-700 dark:text-zinc-300" />
                 <p className="mt-2 text-sm font-semibold">Secure Payment</p>
               </div>
 
-              <div className="rounded-2xl bg-zinc-50 p-4">
-                <RotateCcw size={22} />
+              <div className="rounded-2xl bg-zinc-50 dark:bg-zinc-900/50 p-4">
+                <RotateCcw size={22} className="text-zinc-700 dark:text-zinc-300" />
                 <p className="mt-2 text-sm font-semibold">Easy Returns</p>
               </div>
             </div>
@@ -202,18 +188,18 @@ export default async function ProductDetailPage({
       </section>
 
       <section className="pb-12">
-        <div className="mx-auto grid max-w-7xl gap-6 px-4 lg:grid-cols-[1fr_380px]">
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8">
+        <div className="mx-auto grid w-full xl:w-[75%] gap-6 px-4 sm:px-6 lg:px-8 lg:grid-cols-[1fr_380px]">
+          <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 sm:p-8">
             <h2 className="text-2xl font-bold">Product Information</h2>
 
-            <p className="mt-4 leading-8 text-zinc-600">
+            <p className="mt-4 leading-8 text-zinc-600 dark:text-zinc-400">
               This section is ready for specifications, warranty details,
               seller information, product comparison data, and advanced product
               attributes.
             </p>
           </div>
 
-          <div className="rounded-3xl border border-zinc-200 bg-white p-6 sm:p-8">
+          <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 sm:p-8">
             <h2 className="text-2xl font-bold">Customer Reviews</h2>
 
             <div className="mt-5 flex items-center gap-3">
@@ -228,7 +214,7 @@ export default async function ProductDetailPage({
               reviews, rating filters, and add-review form.
             </p>
 
-            <button className="mt-6 rounded-2xl border border-zinc-200 px-5 py-3 text-sm font-medium transition hover:bg-zinc-100">
+            <button className="mt-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 px-5 py-3 text-sm font-medium transition hover:bg-zinc-100 dark:hover:bg-zinc-800">
               Write a Review
             </button>
           </div>
@@ -237,7 +223,7 @@ export default async function ProductDetailPage({
 
       {relatedProducts.length > 0 && (
         <section className="pb-16">
-          <div className="mx-auto max-w-7xl px-4">
+          <div className="mx-auto w-full xl:w-[75%] px-4 sm:px-6 lg:px-8">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
                 Trending Products

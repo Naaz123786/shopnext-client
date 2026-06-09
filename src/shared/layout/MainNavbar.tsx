@@ -9,6 +9,9 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/features/auth/AuthContext";
 import { SearchProduct, searchProducts } from "@/features/products/api/product-search.service";
+import { useCartStore } from "@/features/cart/store/cart.store";
+import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
+import ThemeToggle from "@/shared/components/ThemeToggle";
 
 export default function MainNavbar() {
   const router = useRouter();
@@ -18,6 +21,10 @@ export default function MainNavbar() {
   const [searchOpen, setSearchOpen] = useState(false);
 
   const { user, loading, logout } = useAuth();
+  
+  // Stores
+  const cartCount = useCartStore((s) => s.getTotalCount());
+  const wishlistCount = useWishlistStore((s) => s.items.length);
 
   const query = keyword.trim();
   const showDropdown = query.length >= 2;
@@ -38,18 +45,18 @@ export default function MainNavbar() {
 
   return (
     <>
-      <div className="border-b border-zinc-200 bg-white sticky top-0 z-40">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 lg:py-4">
+      <div className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 sticky top-0 z-40 transition-colors">
+        <div className="mx-auto flex w-full xl:w-[75%] items-center justify-between px-4 sm:px-6 lg:px-8 py-3 lg:py-4">
 
           {/* LEFT - Logo */}
           <div
             onClick={() => router.push("/")}
             className="flex cursor-pointer items-center gap-2"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0B1220] text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0B1220] dark:bg-white text-white dark:text-black">
               <ShoppingCart size={18} />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-zinc-900 sm:text-2xl">
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-2xl">
               Shop<span className="text-amber-500">Next</span>
             </h1>
           </div>
@@ -81,15 +88,25 @@ export default function MainNavbar() {
 
           {/* RIGHT - Desktop */}
           <div className="hidden lg:flex items-center gap-3">
-            <button className="text-zinc-600 hover:text-zinc-900 transition">
+            <ThemeToggle />
+            
+            <Link href="/wishlist" className="relative text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">
               <Heart size={21} />
-            </button>
-            <button className="relative text-zinc-600 hover:text-zinc-900 transition">
+              {wishlistCount > 0 && (
+                <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-semibold text-black">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            <Link href="/cart" className="relative text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">
               <ShoppingCart size={22} />
-              <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-semibold text-black">
-                0
-              </span>
-            </button>
+              {cartCount > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-semibold text-black">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
 
             {loading ? (
               <div className="h-9 w-28 animate-pulse rounded-xl bg-zinc-100" />
@@ -178,26 +195,30 @@ export default function MainNavbar() {
 
           {/* RIGHT - Mobile icons */}
           <div className="flex items-center gap-2 lg:hidden">
+            <ThemeToggle />
+            
             {/* Search icon */}
             <button
               onClick={() => setSearchOpen((p) => !p)}
-              className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 text-zinc-700"
+              className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300"
             >
               <Search size={18} />
             </button>
 
             {/* Cart */}
-            <button className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 text-zinc-700">
+            <Link href="/cart" className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
               <ShoppingCart size={18} />
-              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-semibold text-black">
-                0
-              </span>
-            </button>
+              {cartCount > 0 && (
+                <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-semibold text-black">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
 
             {/* Hamburger */}
             <button
               onClick={() => setMobileOpen((p) => !p)}
-              className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0B1220] text-white"
+              className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0B1220] dark:bg-white text-white dark:text-black"
             >
               <Menu size={18} />
             </button>
