@@ -37,12 +37,32 @@ export default function HeroSection({ banners }: HeroSectionProps) {
     );
   };
 
+  const slideContent = [
+    {
+      badge: "New Collection",
+      title: "Upgrade Your Shopping Experience",
+      desc: "Discover premium products, exclusive offers, and a smooth modern ecommerce experience built for every device."
+    },
+    {
+      badge: "Limited Edition",
+      title: "Elevate Your Everyday Style",
+      desc: "Explore our latest arrivals featuring premium materials and modern designs crafted for your lifestyle."
+    },
+    {
+      badge: "Special Offer",
+      title: "Unbeatable Deals on Tech",
+      desc: "Get up to 40% off on top electronics and gadgets. Limited time offers you don't want to miss."
+    }
+  ];
+
   if (!activeBanners.length) return null;
+
+  const currentContent = slideContent[activeIndex % slideContent.length];
 
   return (
     <section className="bg-[#F8F8F8] dark:bg-black py-4 sm:py-6">
       <div className="mx-auto w-full xl:w-[75%] px-4 sm:px-6 lg:px-8">
-        <div className="relative min-h-[380px] overflow-hidden rounded-[28px] bg-[#0B1220] shadow-xl sm:min-h-[300px] lg:min-h-[390px] lg:rounded-[36px]">
+        <div className="relative min-h-[480px] overflow-hidden rounded-[28px] bg-[#0B1220] shadow-xl lg:min-h-[540px] lg:rounded-[36px]">
           <AnimatePresence mode="popLayout">
             <motion.div
               key={activeIndex}
@@ -65,41 +85,35 @@ export default function HeroSection({ banners }: HeroSectionProps) {
             </motion.div>
           </AnimatePresence>
 
-          <div className="relative z-10 flex min-h-[380px] items-center px-6 py-10 sm:min-h-[300px] sm:px-10 lg:min-h-[390px] lg:px-20">
+          <div className="relative z-10 flex min-h-[480px] items-center px-6 py-10 sm:px-10 lg:min-h-[540px] lg:px-20">
             <div className="max-w-2xl">
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-amber-400 sm:mb-4 sm:text-sm"
-              >
-                New Collection
-              </motion.p>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeIndex}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-amber-400 sm:mb-4 sm:text-sm">
+                    {currentContent.badge}
+                  </p>
 
-              <motion.h1 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                className="max-w-3xl text-4xl font-bold leading-[1.05] text-white sm:text-6xl lg:text-8xl"
-              >
-                Upgrade Your Shopping Experience
-              </motion.h1>
+                  <h1 className="max-w-3xl text-4xl font-bold leading-[1.1] text-white sm:text-5xl lg:text-7xl">
+                    {currentContent.title}
+                  </h1>
 
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="mt-5 max-w-xl text-base leading-8 text-zinc-200 sm:mt-6 sm:text-lg"
-              >
-                Discover premium products, exclusive offers, and a smooth
-                modern ecommerce experience built for every device.
-              </motion.p>
+                  <p className="mt-4 max-w-xl text-sm leading-relaxed text-zinc-200 sm:mt-6 sm:text-lg sm:leading-8">
+                    {currentContent.desc}
+                  </p>
+                </motion.div>
+              </AnimatePresence>
 
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="mt-7 flex flex-col gap-3 sm:mt-10 sm:flex-row"
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="mt-6 flex flex-col gap-3 sm:mt-10 sm:flex-row"
               >
                 <button 
                   onClick={() => router.push('/products')}
@@ -123,8 +137,8 @@ export default function HeroSection({ banners }: HeroSectionProps) {
               <motion.div 
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-                className="mt-10 hidden max-w-md items-center gap-4 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur lg:flex"
+                transition={{ duration: 0.5, delay: 0.6 }}
+                className="mt-8 hidden max-w-md items-center gap-4 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur lg:flex"
               >
                 <div className="flex -space-x-3">
                   <div className="h-10 w-10 rounded-full border-2 border-white bg-zinc-300" />
@@ -161,17 +175,22 @@ export default function HeroSection({ banners }: HeroSectionProps) {
                 <ChevronRight size={22} />
               </button>
 
-              <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+              <div className="absolute bottom-0 left-0 right-0 z-20 flex h-1.5 bg-white/20">
                 {activeBanners.map((banner, index) => (
-                  <button
+                  <div
                     key={banner.id}
-                    onClick={() => setActiveIndex(index)}
-                    className={`h-2 rounded-full transition-all ${
-                      index === activeIndex
-                        ? "w-8 bg-white"
-                        : "w-2 bg-white/40"
-                    }`}
-                  />
+                    className="h-full flex-1 relative overflow-hidden"
+                  >
+                    {index === activeIndex && (
+                      <motion.div
+                        key={`progress-${activeIndex}`}
+                        initial={{ width: 0 }}
+                        animate={{ width: "100%" }}
+                        transition={{ duration: 4.5, ease: "linear" }}
+                        className="absolute left-0 top-0 h-full bg-amber-400"
+                      />
+                    )}
+                  </div>
                 ))}
               </div>
             </>
