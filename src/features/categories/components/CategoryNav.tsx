@@ -13,8 +13,13 @@ export default function CategoryNav({ categories }: CategoryNavProps) {
   const currentCategoryId = searchParams.get("categoryId");
 
   return (
-    <div className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors">
-      <div className="mx-auto flex w-full xl:w-[75%] items-center gap-3 overflow-x-auto px-4 sm:px-6 lg:px-8 py-3 scrollbar-hide sm:gap-6">
+    <div className="relative border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors">
+      <div className="mx-auto w-full xl:w-[75%] relative">
+        {/* Left and Right scroll fade gradients */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white dark:from-zinc-950 to-transparent z-10 pointer-events-none" />
+        
+        <div className="flex w-full items-center gap-3 overflow-x-auto px-4 sm:px-6 lg:px-8 py-3 scrollbar-hide sm:gap-6 relative">
         <button
           onClick={() => router.push("/")}
           className={`shrink-0 rounded-full px-4 py-2 text-xs font-medium sm:text-sm transition ${
@@ -42,6 +47,7 @@ export default function CategoryNav({ categories }: CategoryNavProps) {
             </button>
           );
         })}
+        </div>
       </div>
     </div>
   );

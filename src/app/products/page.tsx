@@ -3,7 +3,9 @@ import { getCategories } from "@/features/categories/api/category.service";
 import CategoryNav from "@/features/categories/components/CategoryNav";
 import { getFeaturedProducts } from "@/features/products/api/product.service";
 import ProductCard from "@/features/products/components/ProductCard";
+import SortDropdown from "@/features/products/components/SortDropdown";
 import Footer from "@/shared/layout/Footer";
+import { SearchX } from "lucide-react";
 
 import Link from "next/link";
 
@@ -11,6 +13,7 @@ type ProductsPageProps = {
   searchParams: Promise<{
     keyword?: string;
     categoryId?: string;
+    sort?: string;
   }>;
 };
 
@@ -21,6 +24,7 @@ export default async function ProductsPage({
 
   const keyword = params.keyword?.toLowerCase() || "";
   const categoryId = params.categoryId || "";
+  const sort = params.sort || "newest";
 
   let categories = [];
   let products = [];
@@ -47,6 +51,24 @@ export default async function ProductsPage({
       String(product.categoryId) === String(categoryId);
 
     return matchesKeyword && matchesCategory;
+  });
+
+  // Apply Sorting
+  filteredProducts.sort((a, b) => {
+    switch (sort) {
+      case "price-asc":
+        return a.price - b.price;
+      case "price-desc":
+        return b.price - a.price;
+      case "name-asc":
+        return a.name.localeCompare(b.name);
+      case "name-desc":
+        return b.name.localeCompare(a.name);
+      case "newest":
+      default:
+        // Assuming higher ID means newer, or use createdAt if available.
+        return b.id - a.id;
+    }
   });
 
   const selectedCategory = categories.find(
@@ -81,6 +103,14 @@ export default async function ProductsPage({
               ecommerce experience.
             </p>
           </div>
+          
+          {/* Sorting and Filters Bar */}
+          <div className="mt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-zinc-200 dark:border-zinc-800 pt-6">
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              Showing <span className="font-semibold text-zinc-900 dark:text-white">{filteredProducts.length}</span> results
+            </p>
+            <SortDropdown />
+          </div>
         </div>
       </section>
 
@@ -97,15 +127,21 @@ export default async function ProductsPage({
               ))}
             </div>
           ) : (
-            <div className="flex min-h-[300px] flex-col items-center justify-center rounded-3xl border border-dashed border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-center">
+            <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border border-dashed border-zinc-300 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-center px-4">
+              <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-900">
+                <SearchX size={32} className="text-zinc-400" />
+              </div>
               <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
                 No Products Found
               </h2>
 
               <p className="mt-3 max-w-md text-zinc-500 dark:text-zinc-400">
-                Try another search keyword or browse different
-                categories.
+                We couldn&apos;t find anything matching &quot;{keyword}&quot;. Try adjusting your search or filters.
               </p>
+              
+              <Link href="/products" className="mt-8 rounded-xl bg-[#0B1220] dark:bg-white px-6 py-3 text-sm font-semibold text-white dark:text-black transition hover:bg-black dark:hover:bg-zinc-200">
+                Clear all filters
+              </Link>
             </div>
           )}
         </div>

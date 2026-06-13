@@ -36,9 +36,12 @@ export default function ProductCard({ product }: ProductCardProps) {
       whileHover={{ y: -5 }}
       className="group overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition hover:shadow-lg dark:hover:shadow-zinc-900/50 sm:rounded-3xl relative"
     >
-      <div className="absolute top-3 left-3 z-10 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-black">
-        New
-      </div>
+      {/* Only show 'New' badge if product is marked as isNew or has a high rating as a proxy if we don't have isNew */}
+      {(product.isNew || (product.averageRating && product.averageRating >= 4.8)) && (
+        <div className="absolute top-3 left-3 z-10 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-black">
+          New
+        </div>
+      )}
       <Link href={`/products/${createProductSlug(product.name, product.id)}`}>
         <div className="relative overflow-hidden bg-zinc-100">
           <div className="relative aspect-[4/4]">
@@ -97,10 +100,21 @@ export default function ProductCard({ product }: ProductCardProps) {
           </span>
         </div>
 
-        <div className="mt-2 sm:mt-4">
+        <div className="mt-2 flex items-center gap-2 sm:mt-4">
           <span className="text-lg font-bold text-zinc-900 dark:text-white sm:text-2xl">
             ₹{product.price}
           </span>
+          {/* Discount display */}
+          {product.originalPrice && product.originalPrice > product.price && (
+            <span className="text-xs text-zinc-400 line-through sm:text-sm">
+              ₹{product.originalPrice}
+            </span>
+          )}
+          {product.originalPrice && product.originalPrice > product.price && (
+            <span className="rounded-md bg-green-100 dark:bg-green-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-green-700 dark:text-green-500 sm:text-xs">
+              {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+            </span>
+          )}
         </div>
 
         {mounted && quantityInCart > 0 ? (

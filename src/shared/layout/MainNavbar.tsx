@@ -63,14 +63,14 @@ export default function MainNavbar() {
 
           {/* CENTER - Search bar (desktop only) */}
           <div className="hidden lg:flex flex-1 mx-8 max-w-2xl relative">
-            <div className="flex w-full items-center overflow-hidden rounded-xl border border-zinc-200 bg-white">
+            <div className="flex w-full items-center overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 transition-colors">
               <input
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
                 type="text"
                 placeholder="Search for products..."
-                className="w-full px-4 py-2.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
+                className="w-full px-4 py-2.5 text-sm text-zinc-900 dark:text-white bg-transparent outline-none placeholder:text-zinc-400"
               />
               <button
                 onClick={handleSearch}
@@ -80,7 +80,7 @@ export default function MainNavbar() {
               </button>
             </div>
             {showDropdown && (
-              <div className="absolute left-0 top-12 z-50 w-full overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl">
+              <div className="absolute left-0 top-12 z-50 w-full overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-2xl">
                 <SearchDropdown keyword={query} onSelect={() => setKeyword("")} />
               </div>
             )}
@@ -109,19 +109,19 @@ export default function MainNavbar() {
             </Link>
 
             {loading ? (
-              <div className="h-9 w-28 animate-pulse rounded-xl bg-zinc-100" />
+              <div className="h-9 w-28 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
             ) : user ? (
               <div className="relative">
                 <button
                   onClick={() => setAccountOpen((p) => !p)}
-                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 transition hover:bg-zinc-100"
+                  className="flex items-center gap-2 rounded-xl px-3 py-1.5 transition hover:bg-zinc-100 dark:hover:bg-zinc-800"
                 >
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-700 font-semibold text-sm">
                     {user.name?.[0]?.toUpperCase() ?? "U"}
                   </div>
                   <div className="text-left">
-                    <p className="text-[11px] text-zinc-500">Hello, {user.name?.split(" ")[0]}</p>
-                    <p className="flex items-center gap-0.5 text-sm font-semibold text-zinc-900">
+                    <p className="text-[11px] text-zinc-500 dark:text-zinc-400">Hello, {user.name?.split(" ")[0]}</p>
+                    <p className="flex items-center gap-0.5 text-sm font-semibold text-zinc-900 dark:text-white">
                       Account <ChevronDown size={13} />
                     </p>
                   </div>
@@ -130,15 +130,15 @@ export default function MainNavbar() {
                 {accountOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setAccountOpen(false)} />
-                    <div className="absolute right-0 top-12 z-50 w-72 overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-2xl">
-                      <div className="border-b border-zinc-100 p-4">
+                    <div className="absolute right-0 top-12 z-50 w-72 overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-2xl">
+                      <div className="border-b border-zinc-100 dark:border-zinc-800 p-4">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-amber-700 font-bold text-base">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-500 font-bold text-base">
                             {user.name?.[0]?.toUpperCase() ?? "U"}
                           </div>
                           <div>
-                            <p className="font-semibold text-zinc-900">{user.name}</p>
-                            <p className="text-xs text-zinc-500">{user.email}</p>
+                            <p className="font-semibold text-zinc-900 dark:text-white">{user.name}</p>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400">{user.email}</p>
                           </div>
                         </div>
                       </div>
@@ -151,7 +151,7 @@ export default function MainNavbar() {
                           <button
                             key={item.path}
                             onClick={() => { setAccountOpen(false); router.push(item.path); }}
-                            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-800 hover:bg-zinc-100"
+                            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                           >
                             {item.icon} {item.label}
                           </button>
@@ -163,10 +163,10 @@ export default function MainNavbar() {
                           Update Profile
                         </button>
                       </div>
-                      <div className="border-t border-zinc-100 p-2">
+                      <div className="border-t border-zinc-100 dark:border-zinc-800 p-2">
                         <button
                           onClick={handleLogout}
-                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50"
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
                         >
                           <LogOut size={17} /> Logout
                         </button>
@@ -179,13 +179,13 @@ export default function MainNavbar() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => router.push("/login")}
-                  className="rounded-xl border border-zinc-200 px-4 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-100 transition"
+                  className="rounded-xl border border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition"
                 >
                   Login
                 </button>
                 <button
                   onClick={() => router.push("/register")}
-                  className="rounded-xl bg-[#0B1220] px-4 py-2 text-sm font-medium text-white hover:bg-black transition"
+                  className="rounded-xl bg-[#0B1220] dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-black hover:bg-black dark:hover:bg-zinc-200 transition"
                 >
                   Register
                 </button>
@@ -227,8 +227,8 @@ export default function MainNavbar() {
 
         {/* Mobile Search Bar - expands below navbar */}
         {searchOpen && (
-          <div className="border-t border-zinc-100 px-4 py-3 lg:hidden">
-            <div className="flex items-center overflow-hidden rounded-xl border border-zinc-200">
+          <div className="border-t border-zinc-100 dark:border-zinc-800 px-4 py-3 lg:hidden">
+            <div className="flex items-center overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 transition-colors">
               <input
                 autoFocus
                 value={keyword}
@@ -236,7 +236,7 @@ export default function MainNavbar() {
                 onKeyDown={(e) => { if (e.key === "Enter") handleSearch(); }}
                 type="text"
                 placeholder="Search for products..."
-                className="w-full px-4 py-2.5 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
+                className="w-full px-4 py-2.5 text-sm text-zinc-900 dark:text-white bg-transparent outline-none placeholder:text-zinc-400"
               />
               <button
                 onClick={handleSearch}
@@ -259,10 +259,10 @@ export default function MainNavbar() {
           />
 
           {/* Drawer */}
-          <div className="absolute right-0 top-0 h-full w-[82%] max-w-xs bg-white flex flex-col shadow-2xl">
+          <div className="absolute right-0 top-0 h-full w-[82%] max-w-xs bg-white dark:bg-zinc-950 flex flex-col shadow-2xl transition-colors">
 
             {/* Drawer Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100 dark:border-zinc-800">
               <div
                 onClick={() => { setMobileOpen(false); router.push("/"); }}
                 className="flex items-center gap-2 cursor-pointer"
@@ -270,13 +270,13 @@ export default function MainNavbar() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#0B1220] text-white">
                   <ShoppingCart size={16} />
                 </div>
-                <span className="text-lg font-bold text-zinc-900">
+                <span className="text-lg font-bold text-zinc-900 dark:text-white">
                   Shop<span className="text-amber-500">Next</span>
                 </span>
               </div>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
+                className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700"
               >
                 <X size={17} />
               </button>
@@ -287,28 +287,28 @@ export default function MainNavbar() {
 
               {/* User section */}
               {loading ? (
-                <div className="h-16 animate-pulse rounded-2xl bg-zinc-100" />
+                <div className="h-16 animate-pulse rounded-2xl bg-zinc-100 dark:bg-zinc-800" />
               ) : user ? (
-                <div className="flex items-center gap-3 rounded-2xl bg-zinc-50 border border-zinc-100 px-4 py-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-700 font-bold text-base">
+                <div className="flex items-center gap-3 rounded-2xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-100 dark:border-zinc-800 px-4 py-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-700 dark:text-amber-500 font-bold text-base">
                     {user.name?.[0]?.toUpperCase() ?? "U"}
                   </div>
                   <div className="min-w-0">
-                    <p className="font-semibold text-zinc-900 truncate">{user.name}</p>
-                    <p className="text-xs text-zinc-500 truncate">{user.email}</p>
+                    <p className="font-semibold text-zinc-900 dark:text-white truncate">{user.name}</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">{user.email}</p>
                   </div>
                 </div>
               ) : (
                 <div className="flex gap-2.5">
                   <button
                     onClick={() => { setMobileOpen(false); router.push("/login"); }}
-                    className="flex-1 rounded-xl border border-zinc-200 py-2.5 text-sm font-medium text-zinc-800"
+                    className="flex-1 rounded-xl border border-zinc-200 dark:border-zinc-700 py-2.5 text-sm font-medium text-zinc-800 dark:text-zinc-200"
                   >
                     Login
                   </button>
                   <button
                     onClick={() => { setMobileOpen(false); router.push("/register"); }}
-                    className="flex-1 rounded-xl bg-[#0B1220] py-2.5 text-sm font-medium text-white"
+                    className="flex-1 rounded-xl bg-[#0B1220] dark:bg-white py-2.5 text-sm font-medium text-white dark:text-black"
                   >
                     Register
                   </button>
@@ -324,7 +324,7 @@ export default function MainNavbar() {
                   <button
                     key={item.path}
                     onClick={() => { setMobileOpen(false); router.push(item.path); }}
-                    className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-800 hover:bg-zinc-100 text-left"
+                    className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-left"
                   >
                     {item.label}
                   </button>
@@ -332,7 +332,7 @@ export default function MainNavbar() {
 
                 {user && (
                   <>
-                    <div className="my-1 border-t border-zinc-100" />
+                    <div className="my-1 border-t border-zinc-100 dark:border-zinc-800" />
                     {[
                       { icon: <UserCircle size={17} />, label: "Profile", path: "/profile" },
                       { icon: <Package size={17} />, label: "Orders", path: "/orders" },
@@ -341,7 +341,7 @@ export default function MainNavbar() {
                       <button
                         key={item.path}
                         onClick={() => { setMobileOpen(false); router.push(item.path); }}
-                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-800 hover:bg-zinc-100"
+                        className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                       >
                         {item.icon} {item.label}
                       </button>
@@ -353,10 +353,10 @@ export default function MainNavbar() {
 
             {/* Drawer Footer - Logout */}
             {user && (
-              <div className="border-t border-zinc-100 px-4 py-3">
+              <div className="border-t border-zinc-100 dark:border-zinc-800 px-4 py-3">
                 <button
                   onClick={handleLogout}
-                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-red-600 hover:bg-red-50"
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-red-600 dark:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
                 >
                   <LogOut size={17} /> Logout
                 </button>
@@ -401,17 +401,17 @@ function SearchDropdown({ keyword, onSelect }: { keyword: string; onSelect: () =
           key={p.id}
           href={`/products/${p.slug ?? p.id}`}
           onClick={onSelect}
-          className="flex items-center gap-3 rounded-xl p-3 transition hover:bg-zinc-100"
+          className="flex items-center gap-3 rounded-xl p-3 transition hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
-          <div className="h-11 w-11 shrink-0 overflow-hidden rounded-xl bg-zinc-100">
+          <div className="h-11 w-11 shrink-0 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800">
             {p.imageUrl
               ? <img src={p.imageUrl} alt={p.name} className="h-full w-full object-cover" />
-              : <div className="h-full w-full bg-zinc-200" />
+              : <div className="h-full w-full bg-zinc-200 dark:bg-zinc-700" />
             }
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-zinc-900">{p.name}</p>
-            <p className="text-xs text-zinc-500">₹{p.price}</p>
+            <p className="truncate text-sm font-semibold text-zinc-900 dark:text-white">{p.name}</p>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">₹{p.price}</p>
           </div>
         </Link>
       ))}
@@ -424,10 +424,10 @@ function SearchSkeleton() {
     <div className="space-y-3 p-4">
       {[1, 2, 3].map((i) => (
         <div key={i} className="flex animate-pulse items-center gap-3">
-          <div className="h-11 w-11 rounded-xl bg-zinc-200" />
+          <div className="h-11 w-11 rounded-xl bg-zinc-200 dark:bg-zinc-800" />
           <div className="flex-1 space-y-2">
-            <div className="h-3.5 w-2/3 rounded bg-zinc-200" />
-            <div className="h-3 w-1/3 rounded bg-zinc-200" />
+            <div className="h-3.5 w-2/3 rounded bg-zinc-200 dark:bg-zinc-800" />
+            <div className="h-3 w-1/3 rounded bg-zinc-200 dark:bg-zinc-800" />
           </div>
         </div>
       ))}

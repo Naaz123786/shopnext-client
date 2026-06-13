@@ -40,8 +40,8 @@ const { refreshUser } = useAuth();
     };
 
     return (
-        <main className="min-h-screen bg-[#F6F7FB] px-4 py-8">
-            <div className="mx-auto grid min-h-[calc(100vh-64px)] max-w-6xl overflow-hidden rounded-[2rem] bg-white shadow-2xl lg:grid-cols-2">
+        <main className="min-h-screen bg-[#F6F7FB] dark:bg-black px-4 py-8 transition-colors">
+            <div className="mx-auto grid min-h-[calc(100vh-64px)] max-w-6xl overflow-hidden rounded-[2rem] bg-white dark:bg-zinc-950 shadow-2xl lg:grid-cols-2">
                 <section className="hidden bg-[#0B1220] p-10 text-white lg:flex lg:flex-col lg:justify-between">
                     <div>
                         <div className="flex items-center gap-3">
@@ -79,15 +79,15 @@ const { refreshUser } = useAuth();
                             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0B1220] text-white">
                                 <ShoppingBag size={24} />
                             </div>
-                            <h1 className="text-3xl font-bold text-zinc-900">
+                            <h1 className="text-3xl font-bold text-zinc-900 dark:text-white">
                                 Shop<span className="text-amber-500">Next</span>
                             </h1>
                         </div>
 
-                        <h2 className="text-3xl font-bold text-zinc-900">
+                        <h2 className="text-3xl font-bold text-zinc-900 dark:text-white">
                             Create account
                         </h2>
-                        <p className="mt-2 text-sm text-zinc-500">
+                        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
                             Fill details to start shopping.
                         </p>
 
@@ -99,15 +99,15 @@ const { refreshUser } = useAuth();
 
                         <div className="mt-8 space-y-5">
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-zinc-700">
+                                <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                                     Full name
                                 </label>
-                                <div className="flex items-center rounded-2xl border border-zinc-200 px-4 focus-within:border-zinc-900">
+                                <div className="flex items-center rounded-2xl border border-zinc-200 dark:border-zinc-800 px-4 focus-within:border-zinc-900 dark:focus-within:border-zinc-500">
                                     <User size={18} className="text-zinc-400" />
                                     <input
                                         type="text"
                                         placeholder="Your name"
-                                        className="w-full bg-transparent px-3 py-4 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
+                                        className="w-full bg-transparent px-3 py-4 text-sm text-zinc-900 dark:text-white outline-none placeholder:text-zinc-400"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         required
@@ -116,15 +116,15 @@ const { refreshUser } = useAuth();
                             </div>
 
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-zinc-700">
+                                <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                                     Email address
                                 </label>
-                                <div className="flex items-center rounded-2xl border border-zinc-200 px-4 focus-within:border-zinc-900">
+                                <div className="flex items-center rounded-2xl border border-zinc-200 dark:border-zinc-800 px-4 focus-within:border-zinc-900 dark:focus-within:border-zinc-500">
                                     <Mail size={18} className="text-zinc-400" />
                                     <input
                                         type="email"
                                         placeholder="you@example.com"
-                                        className="w-full bg-transparent px-3 py-4 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
+                                        className="w-full bg-transparent px-3 py-4 text-sm text-zinc-900 dark:text-white outline-none placeholder:text-zinc-400"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
@@ -133,15 +133,15 @@ const { refreshUser } = useAuth();
                             </div>
 
                             <div>
-                                <label className="mb-2 block text-sm font-medium text-zinc-700">
+                                <label className="mb-2 block text-sm font-medium text-zinc-700 dark:text-zinc-300">
                                     Password
                                 </label>
-                                <div className="flex items-center rounded-2xl border border-zinc-200 px-4 focus-within:border-zinc-900">
+                                <div className="flex items-center rounded-2xl border border-zinc-200 dark:border-zinc-800 px-4 focus-within:border-zinc-900 dark:focus-within:border-zinc-500">
                                     <Lock size={18} className="text-zinc-400" />
                                     <input
                                         type="password"
                                         placeholder="Minimum 6 characters"
-                                        className="w-full bg-transparent px-3 py-4 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
+                                        className="w-full bg-transparent px-3 py-4 text-sm text-zinc-900 dark:text-white outline-none placeholder:text-zinc-400"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
@@ -151,15 +151,15 @@ const { refreshUser } = useAuth();
 
                             <button
                                 disabled={loading}
-                                className="w-full rounded-2xl bg-[#0B1220] py-4 text-sm font-semibold text-white transition hover:bg-black disabled:opacity-60"
+                                className="w-full rounded-2xl bg-[#0B1220] dark:bg-amber-500 py-4 text-sm font-semibold text-white dark:text-black transition hover:bg-black dark:hover:bg-amber-400 disabled:opacity-60"
                             >
                                 {loading ? "Creating account..." : "Create account"}
                             </button>
                         </div>
 
-                        <p className="mt-8 text-center text-sm text-zinc-500">
+                        <p className="mt-8 text-center text-sm text-zinc-500 dark:text-zinc-400">
                             Already have an account?{" "}
-                            <Link href="/login" className="font-semibold text-zinc-900">
+                            <Link href="/login" className="font-semibold text-zinc-900 dark:text-white">
                                 Login
                             </Link>
                         </p>

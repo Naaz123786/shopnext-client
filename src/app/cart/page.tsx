@@ -75,7 +75,7 @@ export default function CartPage() {
                     
                     <button 
                       onClick={() => removeItem(item.productId)}
-                      className="absolute right-4 top-4 text-zinc-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-500/10 z-10 opacity-100 lg:opacity-0 group-hover:opacity-100"
+                      className="absolute right-4 top-4 text-zinc-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-500/10 z-10"
                       title="Remove Item"
                     >
                       <Trash2 size={18} />

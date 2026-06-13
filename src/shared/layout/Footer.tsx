@@ -11,9 +11,9 @@ export default function Footer() {
   return (
     <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors">
       {/* Main Footer */}
-      <div className="mx-auto grid w-full xl:w-[75%] gap-12 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid w-full xl:w-[75%] gap-12 px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:grid-cols-2 lg:grid-cols-5">
         {/* Brand */}
-        <div>
+        <div className="lg:col-span-2">
           <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">
             Shop<span className="text-amber-500">Next</span>
           </h2>
@@ -87,6 +87,30 @@ export default function Footer() {
           <button className="mt-6 rounded-2xl bg-[#0B1220] dark:bg-amber-500 px-6 py-3 text-sm font-medium text-white dark:text-black transition hover:bg-black dark:hover:bg-amber-400">
             Contact Us
           </button>
+        </div>
+
+        {/* Get the App */}
+        <div>
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
+            Get the App
+          </h3>
+
+          <div className="mt-5 flex flex-col gap-3">
+            <button className="flex items-center gap-3 rounded-xl bg-zinc-900 dark:bg-white px-4 py-3 text-white dark:text-black transition hover:bg-black dark:hover:bg-zinc-200 w-44">
+              <div className="text-2xl">🍎</div>
+              <div className="text-left">
+                <p className="text-[10px] uppercase tracking-wider text-zinc-300 dark:text-zinc-500">Download on the</p>
+                <p className="font-semibold text-sm leading-none">App Store</p>
+              </div>
+            </button>
+            <button className="flex items-center gap-3 rounded-xl bg-zinc-900 dark:bg-white px-4 py-3 text-white dark:text-black transition hover:bg-black dark:hover:bg-zinc-200 w-44">
+              <div className="text-2xl">▶️</div>
+              <div className="text-left">
+                <p className="text-[10px] uppercase tracking-wider text-zinc-300 dark:text-zinc-500">GET IT ON</p>
+                <p className="font-semibold text-sm leading-none">Google Play</p>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
 
