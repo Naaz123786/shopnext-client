@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, ShoppingCart, Star } from "lucide-react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { useCartStore } from "@/features/cart/store/cart.store";
 import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 
@@ -68,6 +69,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                 imageUrl: product.imageUrl,
                 categoryName: product.categoryName,
               });
+              if (!wishlisted) {
+                toast.success("Added to wishlist");
+              } else {
+                toast("Removed from wishlist");
+              }
             }}
             className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-sm sm:right-4 sm:top-4 sm:h-10 sm:w-10 hover:bg-white"
           >
@@ -140,13 +146,16 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         ) : (
           <button 
-            onClick={() => addItem({
-              productId: product.id,
-              name: product.name,
-              price: product.price,
-              imageUrl: product.imageUrl,
-              categoryName: product.categoryName,
-            })}
+            onClick={() => {
+              addItem({
+                productId: product.id,
+                name: product.name,
+                price: product.price,
+                imageUrl: product.imageUrl,
+                categoryName: product.categoryName,
+              });
+              toast.success("Added to cart");
+            }}
             className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl bg-[#0B1220] dark:bg-white px-3 py-2 text-xs font-medium text-white dark:text-black transition hover:bg-black dark:hover:bg-zinc-100 sm:mt-5 sm:gap-2 sm:rounded-2xl sm:py-3 sm:text-base"
           >
             <ShoppingCart size={15} className="sm:size-[18px]" />

@@ -20,6 +20,9 @@ import Newsletter from "@/shared/components/Newsletter";
 import Footer from "@/shared/layout/Footer";
 import ProductCard from "@/features/products/components/ProductCard";
 import ProductActions from "@/features/products/components/ProductActions";
+import ImageGallery from "@/features/products/components/ImageGallery";
+import ProductTabs from "@/features/products/components/ProductTabs";
+import ProductViewTracker from "@/features/products/components/ProductViewTracker";
 
 type ProductDetailPageProps = {
   params: Promise<{
@@ -59,6 +62,7 @@ export default async function ProductDetailPage({
     product.imageUrl,
     product.imageUrl,
     product.imageUrl,
+    product.imageUrl,
   ].filter(Boolean) as string[];
 
   const relatedProducts = latestProducts
@@ -67,6 +71,7 @@ export default async function ProductDetailPage({
 
   return (
     <main className="min-h-screen bg-[#F8F8F8] dark:bg-black text-zinc-900 dark:text-zinc-100">
+      <ProductViewTracker product={product} />
       <CategoryNav categories={categories} />
 
       <section className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
@@ -86,37 +91,7 @@ export default async function ProductDetailPage({
       <section className="py-8 sm:py-12">
         <div className="mx-auto grid w-full xl:w-[75%] gap-8 px-4 sm:px-6 lg:px-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 sm:p-6">
-            <div className="relative aspect-square overflow-hidden rounded-2xl bg-zinc-100 dark:bg-zinc-900">
-              {product.imageUrl ? (
-                <Image
-                  src={product.imageUrl}
-                  alt={product.name}
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                />
-              ) : (
-                <div className="h-full w-full bg-zinc-100" />
-              )}
-            </div>
-
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {productImages.map((image, index) => (
-                <button
-                  key={index}
-                  className="relative aspect-square overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-100 transition hover:border-black"
-                >
-                  <Image
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="120px"
-                  />
-                </button>
-              ))}
-            </div>
+            <ImageGallery images={productImages} productName={product.name} />
           </div>
 
           <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5 sm:p-8">
@@ -188,36 +163,8 @@ export default async function ProductDetailPage({
       </section>
 
       <section className="pb-12">
-        <div className="mx-auto grid w-full xl:w-[75%] gap-6 px-4 sm:px-6 lg:px-8 lg:grid-cols-[1fr_380px]">
-          <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 sm:p-8">
-            <h2 className="text-2xl font-bold">Product Information</h2>
-
-            <p className="mt-4 leading-8 text-zinc-600 dark:text-zinc-400">
-              This section is ready for specifications, warranty details,
-              seller information, product comparison data, and advanced product
-              attributes.
-            </p>
-          </div>
-
-          <div className="rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-6 sm:p-8">
-            <h2 className="text-2xl font-bold">Customer Reviews</h2>
-
-            <div className="mt-5 flex items-center gap-3">
-              <Star className="fill-amber-400 text-amber-400" />
-              <p className="text-lg font-semibold">
-                {product.averageRating ?? 0} out of 5
-              </p>
-            </div>
-
-            <p className="mt-3 text-sm text-zinc-500">
-              Review API is already planned. Later this section will show real
-              reviews, rating filters, and add-review form.
-            </p>
-
-            <button className="mt-6 rounded-2xl border border-zinc-200 dark:border-zinc-800 px-5 py-3 text-sm font-medium transition hover:bg-zinc-100 dark:hover:bg-zinc-800">
-              Write a Review
-            </button>
-          </div>
+        <div className="mx-auto w-full xl:w-[75%] px-4 sm:px-6 lg:px-8">
+          <ProductTabs product={product} />
         </div>
       </section>
 

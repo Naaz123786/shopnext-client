@@ -12,6 +12,7 @@ import { SearchProduct, searchProducts } from "@/features/products/api/product-s
 import { useCartStore } from "@/features/cart/store/cart.store";
 import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 import ThemeToggle from "@/shared/components/ThemeToggle";
+import MiniCart from "@/shared/components/MiniCart";
 
 export default function MainNavbar() {
   const router = useRouter();
@@ -19,6 +20,7 @@ export default function MainNavbar() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
 
   const { user, loading, logout } = useAuth();
   
@@ -33,7 +35,7 @@ export default function MainNavbar() {
     if (!query) return;
     setKeyword("");
     setSearchOpen(false);
-    router.push(`/products?keyword=${encodeURIComponent(query)}`);
+    router.push(`/search?q=${encodeURIComponent(query)}`);
   };
 
   const handleLogout = () => {
@@ -99,14 +101,14 @@ export default function MainNavbar() {
               )}
             </Link>
 
-            <Link href="/cart" className="relative text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">
+            <button onClick={() => setCartOpen(true)} className="relative text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition">
               <ShoppingCart size={22} />
               {cartCount > 0 && (
                 <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-semibold text-black">
                   {cartCount}
                 </span>
               )}
-            </Link>
+            </button>
 
             {loading ? (
               <div className="h-9 w-28 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-800" />
@@ -206,14 +208,14 @@ export default function MainNavbar() {
             </button>
 
             {/* Cart */}
-            <Link href="/cart" className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+            <button onClick={() => setCartOpen(true)} className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
               <ShoppingCart size={18} />
               {cartCount > 0 && (
                 <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] font-semibold text-black">
                   {cartCount}
                 </span>
               )}
-            </Link>
+            </button>
 
             {/* Hamburger */}
             <button
@@ -365,6 +367,8 @@ export default function MainNavbar() {
           </div>
         </div>
       )}
+      {/* Mini Cart Drawer */}
+      <MiniCart isOpen={cartOpen} onClose={() => setCartOpen(false)} />
     </>
   );
 }

@@ -3,6 +3,9 @@
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Product } from "../../products/api/product.service";
 
 function CountdownTimer() {
   const [timeLeft, setTimeLeft] = useState({
@@ -43,8 +46,10 @@ function CountdownTimer() {
   );
 }
 
-export default function PromoBanner() {
+export default function PromoBanner({ products = [] }: { products?: Product[] }) {
   const router = useRouter();
+  
+  const saleProducts = products.slice(0, 3);
 
   return (
     <section className="pb-16 sm:pb-24 bg-[#F8F8F8] dark:bg-black transition-colors">
@@ -113,10 +118,52 @@ export default function PromoBanner() {
                 </span>
               </button>
 
-              <p className="text-center text-sm font-medium text-zinc-400 mt-2">
+              <p className="text-center text-sm font-medium text-zinc-400 mt-2 mb-8 lg:mb-0">
                 No promo code needed.
               </p>
             </motion.div>
+
+            {/* Sale Products */}
+            {saleProducts.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 w-full lg:w-auto"
+              >
+                {saleProducts.map((product) => (
+                  <Link 
+                    href={`/products/${product.id}`} 
+                    key={product.id}
+                    className="group bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 rounded-2xl p-3 flex flex-col gap-3 transition-colors"
+                  >
+                    <div className="relative aspect-square rounded-xl overflow-hidden bg-zinc-900 border border-white/5">
+                      {product.imageUrl && (
+                        <Image 
+                          src={product.imageUrl} 
+                          alt={product.name} 
+                          fill 
+                          className="object-cover transition duration-500 group-hover:scale-110" 
+                          sizes="150px"
+                        />
+                      )}
+                      <div className="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full z-10">
+                        {product.originalPrice ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) : 30}% OFF
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-zinc-400 line-clamp-1">{product.categoryName}</p>
+                      <h3 className="text-sm font-medium text-white line-clamp-1 group-hover:text-amber-400 transition-colors">{product.name}</h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-sm font-bold text-amber-400">₹{product.price}</span>
+                        <span className="text-xs text-zinc-500 line-through">₹{product.originalPrice || Math.round(product.price * 1.3)}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </motion.div>
+            )}
           </div>
         </div>
       </div>

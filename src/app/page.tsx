@@ -4,6 +4,7 @@ import { getFeaturedProducts } from "@/features/products/api/product.service";
 import CategoryNav from "@/features/categories/components/CategoryNav";
 import FeaturedProducts from "@/features/products/components/FeaturedProducts";
 import CategoryShowcase from "@/features/categories/components/CategoryShowcase";
+import TrendingProducts from "@/features/products/components/TrendingProducts";
 
 import HeroSection from "@/features/banners/components/HeroSection";
 import PromoBanner from "@/features/banners/components/PromoBanner";
@@ -12,6 +13,7 @@ import Footer from "@/shared/layout/Footer";
 import StatsBar from "@/shared/components/StatsBar";
 import Testimonials from "@/shared/components/Testimonials";
 import WhatsAppButton from "@/shared/components/WhatsAppButton";
+import RecentlyViewed from "@/shared/components/RecentlyViewed";
 
 export default async function Home() {
   let banners = [];
@@ -39,8 +41,10 @@ export default async function Home() {
       <StatsBar />
       <FeaturedProducts products={products} />
       <CategoryShowcase />
-      <PromoBanner />
+      <TrendingProducts products={products} />
+      <PromoBanner products={products} />
       <Testimonials />
+      <RecentlyViewed />
       <Newsletter />
       <Footer />
       <WhatsAppButton />

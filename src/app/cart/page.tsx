@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Trash2, ArrowRight, ShoppingCart, Tag, ShieldCheck, Truck, RotateCcw } from "lucide-react";
 import Footer from "@/shared/layout/Footer";
 import { useCartStore } from "@/features/cart/store/cart.store";
+import { toast } from "sonner";
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotalCount, getTotalPrice, clearCart } = useCartStore();
@@ -42,7 +43,10 @@ export default function CartPage() {
             </h1>
             {items.length > 0 && (
               <button 
-                onClick={clearCart} 
+                onClick={() => {
+                  clearCart();
+                  toast("Cart cleared");
+                }} 
                 className="text-sm font-medium text-red-500 hover:text-red-600 hover:underline flex items-center gap-2 px-4 py-2 rounded-xl transition hover:bg-red-50 dark:hover:bg-red-500/10 self-start sm:self-auto"
               >
                 <Trash2 size={16} /> Clear Cart
@@ -74,7 +78,10 @@ export default function CartPage() {
                   <div key={item.productId} className="flex flex-col sm:flex-row gap-5 rounded-[28px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 sm:p-5 shadow-sm relative group hover:shadow-md transition-shadow">
                     
                     <button 
-                      onClick={() => removeItem(item.productId)}
+                      onClick={() => {
+                        removeItem(item.productId);
+                        toast("Removed from cart");
+                      }}
                       className="absolute right-4 top-4 text-zinc-400 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-500/10 z-10"
                       title="Remove Item"
                     >

@@ -7,6 +7,7 @@ import { Trash2, ShoppingCart, Heart, ArrowRight, Check } from "lucide-react";
 import Footer from "@/shared/layout/Footer";
 import { useWishlistStore } from "@/features/wishlist/store/wishlist.store";
 import { useCartStore } from "@/features/cart/store/cart.store";
+import { toast } from "sonner";
 
 export default function WishlistPage() {
   const { items, removeItem, clearWishlist } = useWishlistStore();
@@ -26,9 +27,11 @@ export default function WishlistPage() {
       imageUrl: item.imageUrl,
       categoryName: item.categoryName,
     });
+    toast.success("Added to cart");
   };
 
   const handleMoveAllToCart = () => {
+    let movedCount = 0;
     items.forEach(item => {
       if (!cartItems.some(ci => ci.productId === item.productId)) {
         addItemToCart({
@@ -38,9 +41,13 @@ export default function WishlistPage() {
           imageUrl: item.imageUrl,
           categoryName: item.categoryName,
         });
+        movedCount++;
       }
     });
     clearWishlist();
+    if (movedCount > 0) {
+      toast.success(`Moved ${movedCount} items to cart`);
+    }
   };
 
   if (!mounted) {
@@ -136,7 +143,10 @@ export default function WishlistPage() {
                   <div key={item.productId} className="flex flex-col rounded-[28px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-4 shadow-sm relative group hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                     
                     <button 
-                      onClick={() => removeItem(item.productId)}
+                      onClick={() => {
+                        removeItem(item.productId);
+                        toast("Removed from wishlist");
+                      }}
                       className="absolute right-6 top-6 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 dark:bg-black/70 backdrop-blur shadow-sm text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/20 transition-colors opacity-100 sm:opacity-0 group-hover:opacity-100"
                       title="Remove from wishlist"
                     >
